@@ -9,6 +9,12 @@ interface MyScheduleProps {
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const MODS = Array.from({ length: 10 }, (_, i) => `Mod ${i + 1}`);
 
+// A simple validator to check if the imported file has the correct structure.
+const isValidSchedule = (data: any): data is StudentSchedule => {
+  return data && typeof data.shieldRoom === 'string' && typeof data.days === 'object' && DAYS.every(day => typeof data.days[day] === 'object');
+};
+
+
 const MySchedule: React.FC<MyScheduleProps> = ({ studentSchedule, setStudentSchedule }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [localSchedule, setLocalSchedule] = useState<StudentSchedule>(studentSchedule);
@@ -45,18 +51,76 @@ const MySchedule: React.FC<MyScheduleProps> = ({ studentSchedule, setStudentSche
     setLocalSchedule(studentSchedule);
     setIsEditing(false);
   }
+  
+  const handleExport = () => {
+    const jsonString = JSON.stringify(studentSchedule, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'whs-schedule.json';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleImport = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const text = e.target?.result;
+        if (typeof text !== 'string') {
+          throw new Error("File content is not readable text.");
+        }
+        const parsedData = JSON.parse(text);
+        if (isValidSchedule(parsedData)) {
+          setStudentSchedule(parsedData); // This will save to localStorage and update state
+          setLocalSchedule(parsedData); // also update local state to match
+          alert('Schedule imported successfully!');
+        } else {
+          alert('Error: The imported file is not a valid schedule file.');
+        }
+      } catch (error) {
+        console.error('Failed to import schedule:', error);
+        alert('Error: Could not read or parse the schedule file. Please make sure it is a valid .json file.');
+      }
+    };
+    reader.readAsText(file);
+    // Reset the input value to allow importing the same file again
+    event.target.value = '';
+  };
+
 
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-bold text-center text-[#E6E7E8]">My Week at a Glance</h2>
+        <h2 className="text-xl font-bold text-[#E6E7E8]">My Week at a Glance</h2>
         {!isEditing ? (
-          <button
-            onClick={() => setIsEditing(true)}
-            className="px-4 py-2 text-sm font-bold bg-[#c8102e] rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-[#c8102e]"
-          >
-            Edit Schedule
-          </button>
+          <div className="flex gap-2">
+            <input type="file" accept=".json" onChange={handleImport} className="hidden" id="import-schedule-input" />
+            <button
+                onClick={() => document.getElementById('import-schedule-input')?.click()}
+                className="px-4 py-2 text-sm font-bold bg-[#3A3A3C] rounded-md hover:bg-[#4A4A4C] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-white"
+            >
+                Import
+            </button>
+             <button
+                onClick={handleExport}
+                className="px-4 py-2 text-sm font-bold bg-[#3A3A3C] rounded-md hover:bg-[#4A4A4C] transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-white"
+            >
+                Export
+            </button>
+            <button
+                onClick={() => setIsEditing(true)}
+                className="px-4 py-2 text-sm font-bold bg-[#c8102e] rounded-md hover:bg-red-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-black focus:ring-[#c8102e]"
+            >
+                Edit Schedule
+            </button>
+          </div>
         ) : (
           <div className="flex gap-2">
             <button
