@@ -117,4 +117,8 @@ const rawScheduleData: { [key: string]: RawMod[] } = {
 export const SCHEDULES: Schedules = Object.entries(rawScheduleData).reduce((acc, [key, mods]) => {
     acc[key] = generateFullSchedule(mods);
     return acc;
+<<<<<<< HEAD
 }, {} as Schedules);
+=======
+}, {} as Schedules);
+>>>>>>> 351c5c58421796d6a5fafd0ae715990beda3f12c

@@ -8,4 +8,8 @@ export const getCanonicalModName = (name: string): string => {
   }
   // Returns the original name for special cases like 'SHIELD TIME', 'Passing Period', etc.
   return name;
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 351c5c58421796d6a5fafd0ae715990beda3f12c
