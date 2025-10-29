@@ -1,0 +1,5 @@
+{
+  "name": "School Bell Schedule Dashboard",
+  "description": "A dashboard to display a school's bell schedule, showing the current class period (mod), time remaining, and the next period. The UI is themed with the school's black and red colors.",
+  "requestFramePermissions": []
+}
