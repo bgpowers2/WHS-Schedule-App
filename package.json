@@ -1,15 +1,10 @@
 {
-<<<<<<< HEAD
   "name": "school-bell-schedule",
-=======
-  "name": "school-bell-schedule-dashboard",
->>>>>>> 351c5c58421796d6a5fafd0ae715990beda3f12c
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-<<<<<<< HEAD
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
@@ -25,19 +20,3 @@
     "vite": "^4.4.5"
   }
 }
-=======
-    "build": "vite build",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0"
-  }
-}
->>>>>>> 351c5c58421796d6a5fafd0ae715990beda3f12c
