@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, } from 'react';
 import type { StudentSchedule } from '../types';
 
 const STORAGE_KEY = 'studentSchedule';
